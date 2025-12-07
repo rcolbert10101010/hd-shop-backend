@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Unit {
+  id            String       @id @default(uuid())
+  customerId    String
+  type          String
+  make          String
+  model         String
+  year          Int?
+  vin           String?
+  serialNumber  String?
+  workOrders    WorkOrder[]
+}
+
+model WorkOrder {
+  id          String    @id @default(uuid())
+  unitId      String
+  description String
+  status      String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  unit        Unit      @relation(fields: [unitId], references: [id])
+}
